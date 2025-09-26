@@ -1,10 +1,56 @@
+// Updated Sidebar.jsx
 import React from "react";
-import { MessageSquare, Map, BarChart2, Database, X } from "lucide-react";
+import { useTranslation } from 'react-i18next';
+import { MessageSquare, Map, BarChart2, Database, X, AlertTriangle } from "lucide-react";
 
-export default function Sidebar({ onQuickAction, isOpen, onToggle }) {
+// Language options (these are not translated as they include native names; if needed, add t() for each)
+const LANGUAGES = [
+  { name: "English", code: "en" },
+  { name: "Spanish", code: "es" },
+  { name: "French", code: "fr" },
+  { name: "Hindi (हिन्दी)", code: "hi" },
+  { name: "Kannada (ಕನ್ನಡ)", code: "kn" },
+];
+
+function LanguageSelector({ selected, onChange }) {
+  const { t } = useTranslation();
+  return (
+    <div className="mt-8">
+      <h2 className="text-sm text-gray-400 mb-2">{t('selectLanguage')}</h2>
+      <select
+        className="w-full p-2 rounded bg-gray-900 text-gray-100"
+        value={selected}
+        onChange={onChange}  // Pass the function directly to handle the event
+      >
+        {LANGUAGES.map(lang => (
+          <option key={lang.code} value={lang.code}>{lang.name}</option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
+export default function Sidebar({ 
+  onQuickAction, 
+  isOpen, 
+  onToggle, 
+  selectedLanguage, 
+  onLanguageChange, 
+  isCollapsed, 
+  onToggleCollapse,
+  onNavigate // New prop for navigation
+}) {
+  const { t } = useTranslation();
+
   const handleQuickAction = (action) => {
     if (onQuickAction) {
       onQuickAction(action);
+    }
+  };
+
+  const handleNavigation = (view) => {
+    if (onNavigate) {
+      onNavigate(view);
     }
   };
 
@@ -19,11 +65,6 @@ export default function Sidebar({ onQuickAction, isOpen, onToggle }) {
       )}
 
       {/* --- SIDEBAR --- */}
-      {/* Key Changes:
-        - Now `fixed` on all screens to prevent scrolling with content.
-        - `h-full` ensures it spans the full viewport height.
-        - `lg:translate-x-0` keeps it visible on desktop screens, overriding the mobile toggle behavior.
-      */}
       <aside
         className={`
           fixed top-0 left-0 z-40
@@ -49,50 +90,71 @@ export default function Sidebar({ onQuickAction, isOpen, onToggle }) {
 
         {/* Navigation */}
         <nav className="flex-1 space-y-4">
-          <button className="flex items-center gap-2 hover:text-green-400 w-full text-left transition-colors">
-            <MessageSquare size={18}/> Chat
+          <button 
+            className="flex items-center gap-2 hover:text-green-400 w-full text-left transition-colors"
+            onClick={() => handleNavigation('chat')}
+          >
+            <MessageSquare size={18}/> {t('chat')}
+          </button>
+          <button 
+            className="flex items-center gap-2 hover:text-green-400 w-full text-left transition-colors"
+            onClick={() => handleNavigation('map')}
+          >
+            <Map size={18}/> {t('floatMap')}
+          </button>
+          <button 
+            className="flex items-center gap-2 hover:text-red-400 w-full text-left transition-colors"
+            onClick={() => handleNavigation('emergency')}
+          >
+            <AlertTriangle size={18}/> Emergency
           </button>
           <button className="flex items-center gap-2 hover:text-green-400 w-full text-left transition-colors">
-            <Map size={18}/> Float Map
+            <BarChart2 size={18}/> {t('analytics')}
           </button>
           <button className="flex items-center gap-2 hover:text-green-400 w-full text-left transition-colors">
-            <BarChart2 size={18}/> Analytics
-          </button>
-          <button className="flex items-center gap-2 hover:text-green-400 w-full text-left transition-colors">
-            <Database size={18}/> Data Export
+            <Database size={18}/> {t('dataExport')}
           </button>
         </nav>
 
         {/* Quick Actions */}
         <div className="mt-6">
-          <h2 className="text-sm text-gray-400 mb-2">QUICK ACTIONS</h2>
+          <h2 className="text-sm text-gray-400 mb-2">{t('quickActions')}</h2>
           <div className="flex flex-col gap-2">
             <button 
               className="flex items-center gap-2 hover:text-green-400 w-full text-left transition-colors"
-              onClick={() => handleQuickAction("Show me the ocean float map")}
+              onClick={() => handleQuickAction(t('showMeOceanFloatMap'))}
             >
-              <Map size={16}/> Show Map
+              <Map size={16}/> {t('showMap')}
             </button>
             <button 
               className="flex items-center gap-2 hover:text-green-400 w-full text-left transition-colors"
-              onClick={() => handleQuickAction("Generate a depth profile analysis")}
+              onClick={() => handleQuickAction(t('generateDepthProfileAnalysis'))}
             >
-              <BarChart2 size={16}/> Depth Profile
+              <BarChart2 size={16}/> {t('depthProfile')}
             </button>
             <button 
               className="flex items-center gap-2 hover:text-green-400 w-full text-left transition-colors"
-              onClick={() => handleQuickAction("Compare different ocean regions")}
+              onClick={() => handleQuickAction(t('compareDifferentOceanRegions'))}
             >
-              Compare Regions
+              {t('compareRegions')}
             </button>
             <button 
               className="flex items-center gap-2 hover:text-green-400 w-full text-left transition-colors"
-              onClick={() => handleQuickAction("Show me float profiles")}
+              onClick={() => handleQuickAction(t('showMeFloatProfiles'))}
             >
-              Float Profiles
+              {t('floatProfiles')}
+            </button>
+            <button 
+              className="flex items-center gap-2 hover:text-red-400 w-full text-left transition-colors"
+              onClick={() => handleNavigation('emergency')}
+            >
+              <AlertTriangle size={16}/> Quick Emergency
             </button>
           </div>
         </div>
+
+        {/* Language Selector */}
+        <LanguageSelector selected={selectedLanguage} onChange={onLanguageChange} />
       </aside>
     </>
   );

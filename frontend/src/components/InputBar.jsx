@@ -1,9 +1,7 @@
 import { Navigation, Map, TrendingUp, Download, Mic } from "lucide-react";
 import { useState, useRef } from "react";
 
-
-
-export default function InputBar({ onSend }) {
+export default function InputBar({ onSend, onExport }) {  // Added onExport prop
   const [text, setText] = useState("");
   const [listening, setListening] = useState(false);
   const recognitionRef = useRef(null);
@@ -56,6 +54,16 @@ export default function InputBar({ onSend }) {
     setText("");
   };
 
+  const handleShowMap = () => {
+    window.open("https://incois.gov.in/OON/index.jsp", "_blank");
+  };
+
+  const handleExport = () => {
+    if (onExport) {
+      onExport();  // Trigger the export callback
+    }
+  };
+
   return (
     <div className="p-4 border-t border-neutral-800">
       <div className="bg-neutral-900 rounded-2xl p-3 flex items-center">
@@ -95,17 +103,28 @@ export default function InputBar({ onSend }) {
 
       {/* Action Buttons */}
       <div className="flex gap-3 mt-3">
-        <ActionButton icon={<Map />} label="Show Map" />
+        <ActionButton 
+          icon={<Map />} 
+          label="Show Map" 
+          onClick={handleShowMap}
+        />
         <ActionButton icon={<TrendingUp />} label="Depth Profile" />
-        <ActionButton icon={<Download />} label="Export Data" />
+        <ActionButton 
+          icon={<Download />} 
+          label="Export Data" 
+          onClick={handleExport}
+        />
       </div>
     </div>
   );
 }
 
-function ActionButton({ icon, label }) {
+function ActionButton({ icon, label, onClick }) {
   return (
-    <button className="flex items-center gap-2 bg-neutral-800 hover:bg-neutral-700 px-4 py-2 rounded-xl">
+    <button 
+      className="flex items-center gap-2 bg-neutral-800 hover:bg-neutral-700 px-4 py-2 rounded-xl"
+      onClick={onClick}
+    >
       {icon}
       <span>{label}</span>
     </button>
