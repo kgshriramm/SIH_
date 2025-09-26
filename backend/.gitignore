@@ -1,0 +1,3 @@
+backend/argo_data.db
+node_modules/
+*.log

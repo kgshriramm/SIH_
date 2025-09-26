@@ -6,6 +6,9 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+backend/argo_data.db
+node_modules/
+*.log
 
 node_modules
 dist
