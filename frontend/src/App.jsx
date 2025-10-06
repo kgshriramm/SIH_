@@ -9,7 +9,7 @@ import MapComponent from "./components/MapComponent";
 import EmergencyComponent from "./components/EmergencyComponent";
 import { Download, Share2, X } from "lucide-react";
 
-const BACKEND_URL = "http://127.0.0.1:5000/api/query";
+const BACKEND_URL = "https://sih-jkf2.onrender.com/";
 const ROUTE_INFO_URL = "http://127.0.0.1:5000/api/route_info";
 const SHARE_BACKEND_URL = "http://127.0.0.1:5001/api/share";  // Adjust port/route if needed
 
